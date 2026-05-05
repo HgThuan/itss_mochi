@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { mockAdapter } from './mockBackend';
 const api = axios.create({
   baseURL: '/api',
   headers: {
@@ -7,11 +7,18 @@ const api = axios.create({
   }
 });
 
+
 // Restore token on load
 const token = localStorage.getItem('token');
 if (token) {
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
+
+// -----------------------------------------
+// USE MOCK BACKEND FOR FRONTEND-ONLY MODE
+// -----------------------------------------
+api.defaults.adapter = mockAdapter;
+
 
 // Response interceptor for auth errors
 api.interceptors.response.use(
