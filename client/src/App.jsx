@@ -10,9 +10,6 @@ import DecksPage from './pages/DecksPage';
 import FlashcardPage from './pages/FlashcardPage';
 import ExtractPage from './pages/ExtractPage';
 import MiniTestPage from './pages/MiniTestPage';
-import StreakPage from './pages/StreakPage';
-import PetPage from './pages/PetPage';
-import StudyBuddyPage from './pages/StudyBuddyPage';
 import ProfilePage from './pages/ProfilePage';
 
 const ProtectedRoute = ({ children }) => {
@@ -52,9 +49,9 @@ const App = () => {
       <AuthProvider>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/login" element={<Navigate to="/dashboard" />} />
-          <Route path="/register" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={
@@ -87,21 +84,7 @@ const App = () => {
               <AppLayout><MiniTestPage /></AppLayout>
             </ProtectedRoute>
           } />
-          <Route path="/streak" element={
-            <ProtectedRoute>
-              <AppLayout><StreakPage /></AppLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/pet" element={
-            <ProtectedRoute>
-              <AppLayout><PetPage /></AppLayout>
-            </ProtectedRoute>
-          } />
-          <Route path="/buddy" element={
-            <ProtectedRoute>
-              <AppLayout><StudyBuddyPage /></AppLayout>
-            </ProtectedRoute>
-          } />
+
           <Route path="/profile" element={
             <ProtectedRoute>
               <AppLayout><ProfilePage /></AppLayout>

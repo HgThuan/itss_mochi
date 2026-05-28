@@ -1,9 +1,11 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -11,14 +13,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   const navItems = [
-    { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
-    { path: '/decks', icon: '📚', label: 'Flashcards' },
-    { path: '/extract', icon: '✨', label: 'Extract Words' },
-    { path: '/test', icon: '📝', label: 'Mini Test' },
-    { path: '/streak', icon: '🔥', label: 'Streak' },
-    { path: '/pet', icon: '🐾', label: 'My Pet' },
-    { path: '/buddy', icon: '👥', label: 'Study Buddy' },
-    { path: '/profile', icon: '⚙️', label: 'Settings' },
+    { path: '/dashboard', icon: '🏠', label: t('sidebar.dashboard') },
+    { path: '/decks', icon: '📚', label: t('sidebar.flashcards') },
+    { path: '/extract', icon: '✨', label: t('sidebar.extract') },
+    { path: '/test', icon: '📝', label: t('sidebar.test') },
+    { path: '/profile', icon: '⚙️', label: t('sidebar.settings') },
   ];
 
   return (
@@ -31,7 +30,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         <div className="sidebar-header">
           <div className="sidebar-logo">🎓</div>
           <span className="sidebar-brand">
-            <span className="text-gradient">LinguaPet</span>
+            <span className="text-gradient">Lingua</span>
           </span>
         </div>
 
@@ -56,7 +55,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
             <div className="user-details">
               <div className="user-name">{user?.username}</div>
-              <div className="user-coins">🪙 {user?.coins || 0} coins</div>
             </div>
           </div>
           <button
@@ -64,7 +62,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             onClick={handleLogout}
             style={{ width: '100%', marginTop: '0.75rem' }}
           >
-            🚪 Logout
+            🚪 {t('sidebar.logout')}
           </button>
         </div>
       </nav>

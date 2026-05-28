@@ -1,4 +1,4 @@
-# 🎓 LinguaPet — Language Learning App
+# 🎓 Lingua — Language Learning App
 
 A full-stack web application for learning Japanese and English with flashcards, mini-tests, streak tracking, virtual pets, and study buddies.
 
@@ -48,9 +48,6 @@ Frontend runs on **http://localhost:5173**
 | 📇 Flashcards | 3D flip cards, study mode, browse mode, keyboard nav |
 | ✨ Auto-Extract | Paste any Japanese/English text → auto-extract vocabulary |
 | 📝 Mini Test | Multiple choice quizzes generated from your decks |
-| 🔥 Streak | Daily goals, freeze items, milestone badges & coin rewards |
-| 🐾 Virtual Pet | Adopts from egg → baby → teen → adult → legendary |
-| 👥 Study Buddy | Create groups, invite codes, shared decks, leaderboard |
 
 ## API Endpoints
 
@@ -61,9 +58,6 @@ Frontend runs on **http://localhost:5173**
 | `GET /api/decks` | Get all decks |
 | `POST /api/extract` | Extract vocabulary from text |
 | `POST /api/test/generate/:deckId` | Generate quiz |
-| `GET /api/streak` | Get streak info |
-| `GET /api/pet` | Get pet info |
-| `POST /api/buddy/create` | Create study group |
 
 ## Environment Variables
 

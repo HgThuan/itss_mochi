@@ -41,6 +41,10 @@ const cardSchema = new mongoose.Schema({
   nextReview: {
     type: Date,
     default: null
+  },
+  mastered: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

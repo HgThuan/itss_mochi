@@ -17,7 +17,7 @@ if (token) {
 // -----------------------------------------
 // USE MOCK BACKEND FOR FRONTEND-ONLY MODE
 // -----------------------------------------
-api.defaults.adapter = mockAdapter;
+// api.defaults.adapter = mockAdapter;
 
 
 // Response interceptor for auth errors

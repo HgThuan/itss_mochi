@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Streak = require('../models/Streak');
 const { protect } = require('../middleware/auth');
 
 const generateToken = (id) => {
@@ -26,8 +25,7 @@ router.post('/register', async (req, res) => {
       preferredLanguage: preferredLanguage || 'ja'
     });
 
-    // Create initial streak record
-    await Streak.create({ userId: user._id });
+
 
     res.status(201).json({
       _id: user._id,

@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { useToast } from '../hooks/useToast';
+import { useTranslation } from '../hooks/useTranslation';
 
 const ProfilePage = () => {
   const { user, updateUser, logout } = useAuth();
   const { addToast, ToastContainer } = useToast();
+  const { t, setLanguage } = useTranslation();
   const [form, setForm] = useState({
     username: user?.username || '',
     dailyGoalMinutes: user?.dailyGoalMinutes || 5,
@@ -18,9 +20,10 @@ const ProfilePage = () => {
     try {
       const res = await api.put('/auth/settings', form);
       updateUser(res.data);
-      addToast('Settings saved!', 'success');
+      setLanguage(form.preferredLanguage);
+      addToast(t('settings.savedToast'), 'success');
     } catch (err) {
-      addToast('Failed to save settings', 'error');
+      addToast(t('settings.failedToast'), 'error');
     } finally {
       setSaving(false);
     }
@@ -30,8 +33,8 @@ const ProfilePage = () => {
     <div>
       <ToastContainer />
       <div className="page-header">
-        <h1 className="page-title">⚙️ <span className="text-gradient">Settings</span></h1>
-        <p className="page-subtitle">Manage your profile and preferences</p>
+        <h1 className="page-title">⚙️ <span className="text-gradient">{t('settings.title')}</span></h1>
+        <p className="page-subtitle">{t('settings.subtitle')}</p>
       </div>
 
       <div className="profile-card">
@@ -42,14 +45,11 @@ const ProfilePage = () => {
             </div>
             <h2>{user?.username}</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{user?.email}</p>
-            <div style={{ marginTop: 'var(--space-sm)' }}>
-              <span style={{ color: 'var(--accent-yellow)', fontWeight: 600 }}>🪙 {user?.coins || 0} coins</span>
-            </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
             <div className="form-group">
-              <label className="form-label">Username</label>
+              <label className="form-label">{t('settings.username')}</label>
               <input
                 className="form-input"
                 value={form.username}
@@ -58,22 +58,22 @@ const ProfilePage = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Daily Goal (minutes)</label>
+              <label className="form-label">{t('settings.dailyGoal')}</label>
               <select
                 className="form-select"
                 value={form.dailyGoalMinutes}
                 onChange={e => setForm(p => ({ ...p, dailyGoalMinutes: parseInt(e.target.value) }))}
               >
-                <option value={5}>5 minutes / day</option>
-                <option value={10}>10 minutes / day</option>
-                <option value={15}>15 minutes / day</option>
-                <option value={20}>20 minutes / day</option>
-                <option value={30}>30 minutes / day</option>
+                <option value={5}>{t('settings.minutesDay', { min: 5 })}</option>
+                <option value={10}>{t('settings.minutesDay', { min: 10 })}</option>
+                <option value={15}>{t('settings.minutesDay', { min: 15 })}</option>
+                <option value={20}>{t('settings.minutesDay', { min: 20 })}</option>
+                <option value={30}>{t('settings.minutesDay', { min: 30 })}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Preferred Language</label>
+              <label className="form-label">{t('settings.preferredLang')}</label>
               <select
                 className="form-select"
                 value={form.preferredLanguage}
@@ -81,6 +81,7 @@ const ProfilePage = () => {
               >
                 <option value="ja">🇯🇵 Japanese (日本語)</option>
                 <option value="en">🇬🇧 English</option>
+                <option value="vi">🇻🇳 Tiếng Việt</option>
               </select>
             </div>
 
@@ -90,7 +91,7 @@ const ProfilePage = () => {
               disabled={saving}
               style={{ width: '100%' }}
             >
-              {saving ? 'Saving...' : '💾 Save Settings'}
+              {saving ? t('settings.saving') : t('settings.saveBtn')}
             </button>
 
             <button
@@ -98,7 +99,7 @@ const ProfilePage = () => {
               onClick={logout}
               style={{ width: '100%' }}
             >
-              🚪 Logout
+              {t('settings.logoutBtn')}
             </button>
           </div>
         </div>

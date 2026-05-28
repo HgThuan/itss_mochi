@@ -29,9 +29,7 @@ app.use('/api/decks', require('./routes/decks'));
 app.use('/api/cards', require('./routes/cards'));
 app.use('/api/extract', require('./routes/extract'));
 app.use('/api/test', require('./routes/test'));
-app.use('/api/streak', require('./routes/streak'));
-app.use('/api/pet', require('./routes/pet'));
-app.use('/api/buddy', require('./routes/buddy'));
+app.use('/api/dictionary', require('./routes/dictionary'));
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -22,24 +22,6 @@ const Home = () => {
       title: 'Quick Mini-Tests',
       desc: 'Test your knowledge right after studying with instant quizzes. Multiple choice and more.',
       color: 'var(--accent-blue)'
-    },
-    {
-      icon: '🔥',
-      title: 'Streak System',
-      desc: 'Set daily goals, maintain your streak, use freeze items, and unlock milestone badges!',
-      color: 'var(--accent-orange)'
-    },
-    {
-      icon: '🐾',
-      title: 'Virtual Pet',
-      desc: 'Raise a virtual pet that evolves as you study! Keep learning to help your pet grow from an egg to legendary.',
-      color: 'var(--accent-pink)'
-    },
-    {
-      icon: '👥',
-      title: 'Study Buddies',
-      desc: 'Create study groups, share flashcard decks, and compete on leaderboards with friends.',
-      color: 'var(--accent-green)'
     }
   ];
 
@@ -48,7 +30,7 @@ const Home = () => {
       <header className="landing-nav">
         <div className="landing-nav-logo">
           <div className="logo-icon">🎓</div>
-          <span className="text-gradient">LinguaPet</span>
+          <span className="text-gradient">Lingua</span>
         </div>
         <div className="landing-nav-links">
           {user ? (
@@ -72,7 +54,7 @@ const Home = () => {
         </h1>
         <p className="hero-description">
           Master Japanese and English with smart flashcards, AI-powered vocabulary extraction,
-          mini-tests, and a virtual pet that grows with your knowledge.
+          and mini-tests that reinforce your knowledge.
         </p>
         <div className="hero-cta">
           <Link to="/register" className="btn btn-primary btn-lg">
@@ -117,7 +99,7 @@ const Home = () => {
       </section>
 
       <footer style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-        <p>© 2024 LinguaPet — ITSS2 Project. Built with ❤️ for language learners.</p>
+        <p>© 2024 Lingua — ITSS2 Project. Built with ❤️ for language learners.</p>
       </footer>
     </div>
   );

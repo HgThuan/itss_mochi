@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 const Register = () => {
+  const { t, setLanguage } = useTranslation();
   const [form, setForm] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-    preferredLanguage: 'ja'
+    preferredLanguage: localStorage.getItem('preferredLanguage') || 'ja'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,11 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (name === 'preferredLanguage') {
+      setLanguage(value);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -50,41 +56,41 @@ const Register = () => {
         <div className="glass-card">
           <div className="auth-logo-section">
             <div className="auth-logo">🎓</div>
-            <h1 className="auth-title">Create Account</h1>
-            <p className="auth-subtitle">Start your language learning journey</p>
+            <h1 className="auth-title">{t('auth.signUpTitle')}</h1>
+            <p className="auth-subtitle">{t('auth.signUpSubtitle')}</p>
           </div>
 
           {error && <div className="auth-error">{error}</div>}
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Username</label>
+              <label className="form-label">{t('auth.username')}</label>
               <input
                 id="register-username"
                 type="text"
                 name="username"
                 className="form-input"
-                placeholder="Your username"
+                placeholder={t('auth.placeholderUsername')}
                 value={form.username}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t('auth.email')}</label>
               <input
                 id="register-email"
                 type="email"
                 name="email"
                 className="form-input"
-                placeholder="your@email.com"
+                placeholder={t('auth.placeholderEmail')}
                 value={form.email}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Preferred Language</label>
+              <label className="form-label">{t('auth.preferredLang')}</label>
               <select
                 id="register-language"
                 name="preferredLanguage"
@@ -94,41 +100,42 @@ const Register = () => {
               >
                 <option value="ja">🇯🇵 Japanese (日本語)</option>
                 <option value="en">🇬🇧 English</option>
+                <option value="vi">🇻🇳 Tiếng Việt</option>
               </select>
             </div>
             <div className="form-group">
-              <label className="form-label">Password</label>
+              <label className="form-label">{t('auth.password')}</label>
               <input
                 id="register-password"
                 type="password"
                 name="password"
                 className="form-input"
-                placeholder="Min 6 characters"
+                placeholder={t('auth.placeholderPassword')}
                 value={form.password}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Confirm Password</label>
+              <label className="form-label">{t('auth.confirmPassword')}</label>
               <input
                 id="register-confirm"
                 type="password"
                 name="confirmPassword"
                 className="form-input"
-                placeholder="Confirm your password"
+                placeholder={t('auth.placeholderConfirm')}
                 value={form.confirmPassword}
                 onChange={handleChange}
                 required
               />
             </div>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Creating account...' : '🚀 Create Account'}
+              {loading ? t('auth.loadingCreate') : t('auth.signUpBtn')}
             </button>
           </form>
 
           <div className="auth-footer">
-            Already have an account? <Link to="/login">Sign in</Link>
+            {t('auth.hasAccount')} <Link to="/login">{t('auth.signInLink')}</Link>
           </div>
         </div>
       </div>

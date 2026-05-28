@@ -38,26 +38,7 @@ const getDB = () => {
         efactor: 2.5
       }
     ],
-    pet: {
-      _id: 'pet_1',
-      userId: 'user_1',
-      name: 'Pochi',
-      type: 'dog',
-      level: 1,
-      experience: 0,
-      happiness: 100,
-      lastFed: new Date().toISOString()
-    },
-    streak: {
-      _id: 'streak_1',
-      userId: 'user_1',
-      currentStreak: 1,
-      longestStreak: 1,
-      lastStudyDate: new Date().toISOString(),
-      freezeItems: 2,
-      history: [{ date: new Date().toISOString().split('T')[0], minutesStudied: 10 }]
-    },
-    buddies: []
+
   };
   
   // Update card count
@@ -173,87 +154,7 @@ export const mockAdapter = async (config) => {
       return response(200, { message: 'Deleted' });
     }
 
-    // ---- PET ----
-    if (url === '/pet' && method === 'GET') {
-      return response(200, db.pet);
-    }
-    if (url === '/pet/create' && method === 'POST') {
-      db.pet = {
-        _id: 'pet_' + generateId(),
-        userId: db.user._id,
-        name: data.name || 'Pochi',
-        type: data.type || 'dog',
-        level: 1,
-        experience: 0,
-        happiness: 100,
-        lastFed: new Date().toISOString()
-      };
-      saveDB(db);
-      return response(201, db.pet);
-    }
-    if (url === '/pet/feed' && method === 'POST') {
-      if (db.user.coins >= 50) {
-        db.user.coins -= 50;
-        db.pet.happiness = Math.min(100, db.pet.happiness + 20);
-        db.pet.experience += 10;
-        db.pet.lastFed = new Date().toISOString();
-        if (db.pet.experience >= db.pet.level * 100) {
-          db.pet.level += 1;
-          db.pet.experience = 0;
-        }
-        saveDB(db);
-      }
-      return response(200, { pet: db.pet, coins: db.user.coins });
-    }
-    if (url === '/pet/add-exp' && method === 'POST') {
-      db.pet.experience += 5;
-      if (db.pet.experience >= db.pet.level * 100) {
-        db.pet.level += 1;
-        db.pet.experience = 0;
-      }
-      saveDB(db);
-      return response(200, db.pet);
-    }
 
-    // ---- STREAK ----
-    if (url === '/streak' && method === 'GET') {
-      return response(200, db.streak);
-    }
-    if (url === '/streak/log' && method === 'POST') {
-      const today = new Date().toISOString().split('T')[0];
-      const existing = db.streak.history.find(h => h.date === today);
-      if (existing) {
-        existing.minutesStudied += data.minutes;
-      } else {
-        db.streak.history.push({ date: today, minutesStudied: data.minutes });
-        db.streak.currentStreak += 1;
-        db.streak.longestStreak = Math.max(db.streak.longestStreak, db.streak.currentStreak);
-        db.streak.lastStudyDate = new Date().toISOString();
-      }
-      saveDB(db);
-      return response(200, db.streak);
-    }
-    if (url === '/streak/buy-freeze' && method === 'POST') {
-      if (db.user.coins >= 200) {
-        db.user.coins -= 200;
-        db.streak.freezeItems += 1;
-        saveDB(db);
-      }
-      return response(200, db.streak);
-    }
-    if (url === '/streak/milestones' && method === 'GET') {
-      return response(200, [
-        { days: 3, title: '3-Day Streak', rewardCoins: 50, claimed: db.streak.longestStreak >= 3 },
-        { days: 7, title: '1-Week Warrior', rewardCoins: 150, claimed: db.streak.longestStreak >= 7 }
-      ]);
-    }
-    
-    if (url === '/streak/claim-milestone' && method === 'POST') {
-      if (data.days === 3 && db.streak.longestStreak >= 3) db.user.coins += 50;
-      if (data.days === 7 && db.streak.longestStreak >= 7) db.user.coins += 150;
-      saveDB(db);
-      return response(200, { message: 'Claimed', coins: db.user.coins });
-    }
     
     // ---- EXTRACT (Static mock) ----
     if (url === '/extract' && method === 'POST') {
@@ -311,10 +212,7 @@ export const mockAdapter = async (config) => {
       return response(200, []);
     }
 
-    // ---- BUDDY ----
-    if (url.startsWith('/buddy/') || url === '/buddy/groups') {
-      return response(200, []); // returning empty for buddies for now
-    }
+
 
     console.warn(`Mock backend unhandled request: ${method} ${url}`);
     return response(404, { message: 'Endpoint not implemented in mock' });

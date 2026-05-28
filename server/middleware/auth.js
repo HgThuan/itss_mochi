@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Streak = require('../models/Streak');
 
 const protect = async (req, res, next) => {
   try {
@@ -13,7 +12,6 @@ const protect = async (req, res, next) => {
          preferredLanguage: 'ja',
          coins: 1000
        });
-       await Streak.create({ userId: testUser._id });
     }
     req.user = testUser;
     next();

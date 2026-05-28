@@ -74,12 +74,13 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Card not found' });
     }
 
-    const { front, back, reading, example, difficulty } = req.body;
+    const { front, back, reading, example, difficulty, mastered } = req.body;
     if (front) card.front = front;
     if (back) card.back = back;
     if (reading !== undefined) card.reading = reading;
     if (example !== undefined) card.example = example;
     if (difficulty) card.difficulty = difficulty;
+    if (mastered !== undefined) card.mastered = mastered;
 
     await card.save();
     res.json(card);
@@ -107,6 +108,22 @@ router.put('/:id/review', protect, async (req, res) => {
     const daysUntilNext = intervals[card.difficulty] || 1;
     card.nextReview = new Date(Date.now() + daysUntilNext * 24 * 60 * 60 * 1000);
 
+    await card.save();
+    res.json(card);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// PUT /api/cards/:id/toggle-mastered - Toggle mastered status
+router.put('/:id/toggle-mastered', protect, async (req, res) => {
+  try {
+    const card = await Card.findById(req.params.id);
+    if (!card) {
+      return res.status(404).json({ message: 'Card not found' });
+    }
+
+    card.mastered = !card.mastered;
     await card.save();
     res.json(card);
   } catch (error) {

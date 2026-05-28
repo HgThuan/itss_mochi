@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,27 +32,27 @@ const Login = () => {
         <div className="glass-card">
           <div className="auth-logo-section">
             <div className="auth-logo">🎓</div>
-            <h1 className="auth-title">Welcome back</h1>
-            <p className="auth-subtitle">Sign in to continue learning</p>
+            <h1 className="auth-title">{t('auth.signInTitle')}</h1>
+            <p className="auth-subtitle">{t('auth.signInSubtitle')}</p>
           </div>
 
           {error && <div className="auth-error">{error}</div>}
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t('auth.email')}</label>
               <input
                 id="login-email"
                 type="email"
                 className="form-input"
-                placeholder="your@email.com"
+                placeholder={t('auth.placeholderEmail')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Password</label>
+              <label className="form-label">{t('auth.password')}</label>
               <input
                 id="login-password"
                 type="password"
@@ -62,12 +64,12 @@ const Login = () => {
               />
             </div>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('auth.loadingSignIn') : t('auth.signInBtn')}
             </button>
           </form>
 
           <div className="auth-footer">
-            Don't have an account? <Link to="/register">Sign up</Link>
+            {t('auth.noAccount')} <Link to="/register">{t('auth.signUpLink')}</Link>
           </div>
         </div>
       </div>
