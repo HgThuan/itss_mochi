@@ -113,7 +113,16 @@ const translations = {
       checkAnswer: '回答を確認',
       nextQuestion: '次の問題へ',
       finishBtn: 'テストを終了',
-      choiceLabel: '選択肢 {num}'
+      choiceLabel: '選択肢 {num}',
+      setupTitle: 'テストの設定',
+      setupSubtitle: 'テストの問題数を選択してください',
+      questionCountLabel: '問題数',
+      quickSelect: 'クイック選択',
+      allCards: '全問題',
+      customCount: 'カスタム入力',
+      maxCardsHint: '最大 {max} 問',
+      beginTest: '🚀 テスト開始',
+      cancelSetup: 'キャンセル'
     },
     settings: {
       title: '⚙️ 設定',
@@ -266,7 +275,16 @@ const translations = {
       checkAnswer: 'Check Answer',
       nextQuestion: 'Next Question',
       finishBtn: 'Finish Test',
-      choiceLabel: 'Option {num}'
+      choiceLabel: 'Option {num}',
+      setupTitle: 'Test Setup',
+      setupSubtitle: 'Choose how many questions you want',
+      questionCountLabel: 'Number of Questions',
+      quickSelect: 'Quick Select',
+      allCards: 'All Cards',
+      customCount: 'Custom Amount',
+      maxCardsHint: 'Max {max} questions',
+      beginTest: '🚀 Start Test',
+      cancelSetup: 'Cancel'
     },
     settings: {
       title: '⚙️ Settings',
@@ -419,7 +437,16 @@ const translations = {
       checkAnswer: 'Kiểm tra đáp án',
       nextQuestion: 'Câu tiếp theo',
       finishBtn: 'Hoàn thành bài test',
-      choiceLabel: 'Đáp án {num}'
+      choiceLabel: 'Đáp án {num}',
+      setupTitle: 'Cài đặt bài kiểm tra',
+      setupSubtitle: 'Chọn số lượng câu hỏi phù hợp với bạn',
+      questionCountLabel: 'Số lượng câu hỏi',
+      quickSelect: 'Chọn nhanh',
+      allCards: 'Tất cả thẻ',
+      customCount: 'Nhập tùy chỉnh',
+      maxCardsHint: 'Tối đa {max} câu',
+      beginTest: '🚀 Bắt đầu làm bài',
+      cancelSetup: 'Hủy bỏ'
     },
     settings: {
       title: '⚙️ Cài đặt',

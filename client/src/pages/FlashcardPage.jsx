@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
+import { useSpeech } from '../hooks/useSpeech';
 
 const FlashcardPage = () => {
   const { deckId } = useParams();
   const navigate = useNavigate();
   const { addToast, ToastContainer } = useToast();
   const { t, currentLang } = useTranslation();
+  const { speak, currentlySpeaking, isSupported: speechSupported } = useSpeech();
 
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -279,10 +281,21 @@ const FlashcardPage = () => {
           <div className="flashcard-container" style={{ marginTop: 'var(--space-xl)' }}>
             <div className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
               <div className="flashcard-face flashcard-front">
-                <div className="flashcard-word">{currentCard?.front}</div>
-                {currentCard?.reading && (
-                  <div className="flashcard-reading">{currentCard.reading}</div>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-md)', flexDirection: 'column' }}>
+                  <div className="flashcard-word">{currentCard?.front}</div>
+                  {currentCard?.reading && (
+                    <div className="flashcard-reading">{currentCard.reading}</div>
+                  )}
+                  {speechSupported && (
+                    <button
+                      className={`speak-btn speak-btn-lg${currentlySpeaking === currentCard?.front ? ' speaking' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); speak(currentCard?.front, deck?.language); }}
+                      title={currentLang === 'vi' ? 'Nghe phát âm' : currentLang === 'en' ? 'Listen to pronunciation' : '発音を聞く'}
+                    >
+                      🔊
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="flashcard-face flashcard-back">
                 {currentCard?.back ? (
@@ -395,8 +408,19 @@ const FlashcardPage = () => {
                     </button>
                   </div>
                 </div>
-                <div style={{ fontFamily: 'var(--font-japanese)', fontSize: '1.5rem', fontWeight: 700, margin: '0.5rem 0' }}>
-                  {card.front}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0.5rem 0' }}>
+                  <div style={{ fontFamily: 'var(--font-japanese)', fontSize: '1.5rem', fontWeight: 700, flex: 1 }}>
+                    {card.front}
+                  </div>
+                  {speechSupported && (
+                    <button
+                      className={`speak-btn${currentlySpeaking === card.front ? ' speaking' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); speak(card.front, deck?.language); }}
+                      title={currentLang === 'vi' ? 'Nghe phát âm' : currentLang === 'en' ? 'Listen' : '発音'}
+                    >
+                      🔊
+                    </button>
+                  )}
                 </div>
                 {card.reading && (
                   <div style={{ color: 'var(--accent-purple-light)', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
