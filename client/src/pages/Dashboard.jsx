@@ -9,27 +9,22 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [decks, setDecks] = useState([]);
-  const [recentTests, setRecentTests] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
 
   const loadDashboardData = async () => {
     try {
-      const [decksRes, testRes] = await Promise.all([
-        api.get('/decks').catch(() => ({ data: [] })),
-        api.get('/test/history').catch(() => ({ data: [] }))
-      ]);
+      const decksRes = await api.get('/decks').catch(() => ({ data: [] }));
       setDecks(Array.isArray(decksRes.data) ? decksRes.data : []);
-      setRecentTests(Array.isArray(testRes.data) ? testRes.data.slice(0, 3) : []);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    Promise.resolve().then(() => loadDashboardData());
+  }, []);
 
   if (loading) {
     return (

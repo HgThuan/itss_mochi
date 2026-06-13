@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useToast } from '../hooks/useToast';
@@ -51,29 +51,60 @@ const MiniTestPage = () => {
     || decks.find(d => d._id === (selectedDeck || deckId))?.language
     || 'ja';
 
+  const startTest = useCallback(async (id, count = 10) => {
+    setLoading(true);
+    try {
+      const res = await api.post(`/test/generate/${id}`, { count });
+      setQuestions(res.data.questions);
+      setCurrentQ(0);
+      setAnswers([]);
+      setSelectedAnswer(null);
+      setTestStarted(true);
+      setShowResult(false);
+      setAnswered(false);
+    } catch (err) {
+      addToast(
+        err.response?.data?.message || (
+          currentLang === 'vi' ? 'Lỗi khi tạo bài test'
+          : currentLang === 'en' ? 'Failed to generate test'
+          : 'テストの作成に失敗しました'
+        ),
+        'error'
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [currentLang, addToast]);
+
+  const confirmAndStart = () => {
+    if (!pendingDeck) return;
+    setShowSetupModal(false);
+    setSelectedDeck(pendingDeck._id);
+    startTest(pendingDeck._id, questionCount);
+  };
+
   useEffect(() => {
-    loadDecks();
-  }, []);
+    const loadDecks = async () => {
+      try {
+        const res = await api.get('/decks');
+        setDecks(res.data);
+      } catch {
+        addToast(
+          currentLang === 'vi' ? 'Lỗi khi tải bộ thẻ từ'
+          : currentLang === 'en' ? 'Failed to load decks'
+          : 'デッキの読み込みに失敗しました',
+          'error'
+        );
+      }
+    };
+    Promise.resolve().then(() => loadDecks());
+  }, [currentLang, addToast]);
 
   useEffect(() => {
     if (deckId) {
-      startTest(deckId, 10);
+      Promise.resolve().then(() => startTest(deckId, 10));
     }
-  }, [deckId]);
-
-  const loadDecks = async () => {
-    try {
-      const res = await api.get('/decks');
-      setDecks(res.data);
-    } catch (err) {
-      addToast(
-        currentLang === 'vi' ? 'Lỗi khi tải bộ thẻ từ'
-        : currentLang === 'en' ? 'Failed to load decks'
-        : 'デッキの読み込みに失敗しました',
-        'error'
-      );
-    }
-  };
+  }, [deckId, startTest]);
 
   // Open the setup modal for a chosen deck
   const openSetupModal = (deck) => {
@@ -98,38 +129,6 @@ const MiniTestPage = () => {
       const clamped = Math.max(4, Math.min(parsed, max));
       setQuestionCount(clamped);
       setActivePreset(null); // deselect presets when user types custom
-    }
-  };
-
-  const confirmAndStart = () => {
-    if (!pendingDeck) return;
-    setShowSetupModal(false);
-    setSelectedDeck(pendingDeck._id);
-    startTest(pendingDeck._id, questionCount);
-  };
-
-  const startTest = async (id, count = 10) => {
-    setLoading(true);
-    try {
-      const res = await api.post(`/test/generate/${id}`, { count });
-      setQuestions(res.data.questions);
-      setCurrentQ(0);
-      setAnswers([]);
-      setSelectedAnswer(null);
-      setTestStarted(true);
-      setShowResult(false);
-      setAnswered(false);
-    } catch (err) {
-      addToast(
-        err.response?.data?.message || (
-          currentLang === 'vi' ? 'Lỗi khi tạo bài test'
-          : currentLang === 'en' ? 'Failed to generate test'
-          : 'テストの作成に失敗しました'
-        ),
-        'error'
-      );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -185,14 +184,18 @@ const MiniTestPage = () => {
       try {
         const action = res.data.percentage === 100 ? 'test_perfect' : 'test_pass';
         await api.post('/pet/add-exp', { action });
-      } catch(_) {}
+      } catch {
+        // Ignore error
+      }
 
       // Log study time
       try {
         await api.post('/streak/log', { minutes: 3 });
-      } catch(_) {}
+      } catch {
+        // Ignore error
+      }
 
-    } catch (err) {
+    } catch {
       addToast(
         currentLang === 'vi' ? 'Lỗi khi gửi kết quả kiểm tra'
         : currentLang === 'en' ? 'Failed to submit test'

@@ -19,7 +19,6 @@ const FlashcardPage = () => {
   const [loading, setLoading] = useState(true);
   const [showAddCard, setShowAddCard] = useState(false);
   const [cardForm, setCardForm] = useState({ front: '', back: '', reading: '', example: '' });
-  const [studyStartTime, setStudyStartTime] = useState(null);
   const [mode, setMode] = useState('browse'); // browse | study
   const [filter, setFilter] = useState('all'); // all | not-mastered | mastered
   const [cardToDelete, setCardToDelete] = useState(null); // cardId to delete
@@ -32,32 +31,19 @@ const FlashcardPage = () => {
 
   const currentCard = filteredCards[currentIndex];
 
-  useEffect(() => {
-    setCurrentIndex(0);
-    setIsFlipped(false);
-  }, [filter]);
-
-  useEffect(() => {
-    loadDeck();
-  }, [deckId]);
-
-  useEffect(() => {
-    if (mode === 'study') {
-      setStudyStartTime(Date.now());
-    }
-  }, [mode]);
-
-  const loadDeck = async () => {
+  const toggleMastered = useCallback(async (cardId) => {
     try {
-      const res = await api.get(`/decks/${deckId}`);
-      setDeck(res.data.deck);
-      setCards(res.data.cards);
-    } catch (err) {
-      addToast('Failed to load deck', 'error');
-    } finally {
-      setLoading(false);
+      const res = await api.put(`/cards/${cardId}/toggle-mastered`);
+      setCards(prev => prev.map(c => c._id === cardId ? { ...c, mastered: res.data.mastered } : c));
+      addToast(res.data.mastered 
+        ? (currentLang === 'vi' ? '✅ Đã đánh dấu thuộc!' : currentLang === 'en' ? '✅ Marked as Mastered!' : '✅ 習得済みに設定しました！') 
+        : (currentLang === 'vi' ? '↩️ Đã bỏ đánh dấu thuộc' : currentLang === 'en' ? '↩️ Unmarked Mastered' : '↩️ 習得済みを解除しました'), 
+        'success'
+      );
+    } catch {
+      addToast(currentLang === 'vi' ? 'Lỗi khi cập nhật trạng thái' : currentLang === 'en' ? 'Failed to update status' : '状態の更新に失敗しました', 'error');
     }
-  };
+  }, [currentLang, addToast]);
 
   const handleFlip = () => setIsFlipped(!isFlipped);
 
@@ -91,12 +77,27 @@ const FlashcardPage = () => {
     }
     if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); setIsFlipped(prev => !prev); }
     if (e.key === 'm' && currentCard) { toggleMastered(currentCard._id); }
-  }, [currentIndex, filteredCards.length, showAddCard, currentCard]);
+  }, [currentIndex, filteredCards.length, showAddCard, currentCard, toggleMastered]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
+  useEffect(() => {
+    const loadDeck = async () => {
+      try {
+        const res = await api.get(`/decks/${deckId}`);
+        setDeck(res.data.deck);
+        setCards(res.data.cards);
+      } catch {
+        addToast('Failed to load deck', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDeck();
+  }, [deckId, addToast]);
 
   const saveCard = async (e) => {
     e.preventDefault();
@@ -114,7 +115,7 @@ const FlashcardPage = () => {
       }
       setCardForm({ front: '', back: '', reading: '', example: '' });
       setShowAddCard(false);
-    } catch (err) {
+    } catch {
       addToast('Failed to save card', 'error');
     }
   };
@@ -135,22 +136,8 @@ const FlashcardPage = () => {
         setCurrentIndex(Math.max(0, updatedFilteredCards.length - 1));
       }
       addToast('Card deleted', 'success');
-    } catch (err) {
+    } catch {
       addToast('Failed to delete card', 'error');
-    }
-  };
-
-  const toggleMastered = async (cardId) => {
-    try {
-      const res = await api.put(`/cards/${cardId}/toggle-mastered`);
-      setCards(prev => prev.map(c => c._id === cardId ? { ...c, mastered: res.data.mastered } : c));
-      addToast(res.data.mastered 
-        ? (currentLang === 'vi' ? '✅ Đã đánh dấu thuộc!' : currentLang === 'en' ? '✅ Marked as Mastered!' : '✅ 習得済みに設定しました！') 
-        : (currentLang === 'vi' ? '↩️ Đã bỏ đánh dấu thuộc' : currentLang === 'en' ? '↩️ Unmarked Mastered' : '↩️ 習得済みを解除しました'), 
-        'success'
-      );
-    } catch (err) {
-      addToast(currentLang === 'vi' ? 'Lỗi khi cập nhật trạng thái' : currentLang === 'en' ? 'Failed to update status' : '状態の更新に失敗しました', 'error');
     }
   };
 
@@ -219,19 +206,19 @@ const FlashcardPage = () => {
           <div className="filter-group">
             <button
               className={`filter-option-btn ${filter === 'all' ? 'active-all' : ''}`}
-              onClick={() => setFilter('all')}
+              onClick={() => { setFilter('all'); setCurrentIndex(0); setIsFlipped(false); }}
             >
               {t('flashcards.all', { count: cards.length })}
             </button>
             <button
               className={`filter-option-btn ${filter === 'not-mastered' ? 'active-unmastered' : ''}`}
-              onClick={() => setFilter('not-mastered')}
+              onClick={() => { setFilter('not-mastered'); setCurrentIndex(0); setIsFlipped(false); }}
             >
               {t('flashcards.unmastered', { count: cards.filter(c => !c.mastered).length })}
             </button>
             <button
               className={`filter-option-btn ${filter === 'mastered' ? 'active-mastered' : ''}`}
-              onClick={() => setFilter('mastered')}
+              onClick={() => { setFilter('mastered'); setCurrentIndex(0); setIsFlipped(false); }}
             >
               {t('flashcards.mastered', { count: cards.filter(c => c.mastered).length })}
             </button>
