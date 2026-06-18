@@ -29,18 +29,18 @@ const Login = () => {
   const handleGuestLogin = async () => {
     setError('');
     setLoading(true);
-    const guestEmail = 'guest@example.com';
-    const guestPassword = 'password123';
+    
+    // Generate a unique guest account
+    const randomId = Math.random().toString(36).substring(2, 9);
+    const guestUsername = `Guest_${randomId}`;
+    const guestEmail = `guest_${randomId}@example.com`;
+    const guestPassword = `guestPass_${randomId}`;
+    
     try {
-      await login(guestEmail, guestPassword);
+      await register(guestUsername, guestEmail, guestPassword, 'ja');
       navigate('/dashboard');
-    } catch (err) {
-      try {
-        await register('Guest User', guestEmail, guestPassword, 'ja');
-        navigate('/dashboard');
-      } catch (regErr) {
-        setError(regErr.response?.data?.message || 'Guest login failed');
-      }
+    } catch (regErr) {
+      setError(regErr.response?.data?.message || 'Guest login failed');
     } finally {
       setLoading(false);
     }
