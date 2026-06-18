@@ -29,13 +29,13 @@ const Login = () => {
   const handleGuestLogin = async () => {
     setError('');
     setLoading(true);
-    
+
     // Generate a unique guest account
     const randomId = Math.random().toString(36).substring(2, 9);
     const guestUsername = `Guest_${randomId}`;
     const guestEmail = `guest_${randomId}@example.com`;
     const guestPassword = `guestPass_${randomId}`;
-    
+
     try {
       await register(guestUsername, guestEmail, guestPassword, 'en');
       navigate('/dashboard');
@@ -71,25 +71,7 @@ const Login = () => {
       <div className="auth-card">
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '-1.5rem', position: 'relative', zIndex: 10 }}>
-            <select
-              value={currentLang}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="form-select"
-              style={{
-                width: 'auto',
-                padding: '0.35rem 0.75rem',
-                fontSize: '0.8rem',
-                background: 'var(--bg-glass)',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-md)',
-                cursor: 'pointer',
-                color: 'var(--text-primary)'
-              }}
-            >
-              <option value="en">🇬🇧 English</option>
-              <option value="ja">🇯🇵 Japanese</option>
-              <option value="vi">🇻🇳 Tiếng Việt</option>
-            </select>
+
           </div>
 
           <div className="auth-logo-section">
