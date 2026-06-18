@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useToast } from '../hooks/useToast';
-import { fetchEnglishDefinition, fetchJapaneseDefinition, translateToVietnamese } from '../services/dictionaryService';
+import { fetchEnglishDefinition, translateToVietnamese } from '../services/dictionaryService';
 import { useTranslation } from '../hooks/useTranslation';
 
 const ExtractPage = () => {
@@ -48,7 +48,7 @@ const ExtractPage = () => {
       // Automatically fetch definitions in parallel
       await fetchDefinitionsParallel(extractedWords, language);
       
-    } catch (err) {
+    } catch {
       addToast(currentLang === 'vi' ? 'Trích xuất thất bại' : currentLang === 'en' ? 'Extraction failed' : '抽出に失敗しました', 'error');
     }
   };
@@ -145,7 +145,7 @@ const ExtractPage = () => {
       });
       addToast(currentLang === 'vi' ? `Đã tạo bộ thẻ với ${res.data.wordCount} từ!` : currentLang === 'en' ? `Deck created with ${res.data.wordCount} words!` : `デッキを作成し、${res.data.wordCount} 語を保存しました！`, 'success');
       navigate(`/decks/${res.data.deck._id}`);
-    } catch (err) {
+    } catch {
       addToast(currentLang === 'vi' ? 'Lỗi khi lưu bộ thẻ' : currentLang === 'en' ? 'Failed to save deck' : 'デッキの保存に失敗しました', 'error');
     } finally {
       setSaving(false);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { mockAdapter } from './mockBackend';
+// import { mockAdapter } from './mockBackend';
 const api = axios.create({
   baseURL: '/api',
   headers: {

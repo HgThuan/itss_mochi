@@ -1,8 +1,9 @@
 {
-  "name": "itss-mochi-root",
+  "name": "lingua-monorepo",
   "version": "1.0.0",
   "description": "Root package.json for deploying frontend and backend to Vercel",
   "scripts": {
+    "build": "cd client && npm install && npm run build",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "dependencies": {

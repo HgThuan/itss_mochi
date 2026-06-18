@@ -22,7 +22,7 @@ const ProfilePage = () => {
       updateUser(res.data);
       setLanguage(form.preferredLanguage);
       addToast(t('settings.savedToast'), 'success');
-    } catch (err) {
+    } catch {
       addToast(t('settings.failedToast'), 'error');
     } finally {
       setSaving(false);

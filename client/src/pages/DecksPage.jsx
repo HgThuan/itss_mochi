@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useToast } from '../hooks/useToast';
@@ -20,20 +20,20 @@ const DecksPage = () => {
     return true;
   });
 
-  useEffect(() => {
-    loadDecks();
-  }, []);
-
-  const loadDecks = async () => {
+  const loadDecks = useCallback(async () => {
     try {
       const res = await api.get('/decks');
       setDecks(res.data);
-    } catch (err) {
+    } catch {
       addToast(currentLang === 'vi' ? 'Lỗi khi tải bộ thẻ' : currentLang === 'en' ? 'Failed to load decks' : 'デッキの読み込みに失敗しました', 'error');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentLang, addToast]);
+
+  useEffect(() => {
+    Promise.resolve().then(() => loadDecks());
+  }, [loadDecks]);
 
   const createDeck = async (e) => {
     e.preventDefault();
@@ -43,7 +43,7 @@ const DecksPage = () => {
       setShowCreate(false);
       setForm({ title: '', description: '', language: 'ja' });
       addToast(currentLang === 'vi' ? 'Đã tạo bộ thẻ thành công!' : currentLang === 'en' ? 'Deck created!' : 'デッキを作成しました！', 'success');
-    } catch (err) {
+    } catch {
       addToast(currentLang === 'vi' ? 'Lỗi khi tạo bộ thẻ' : currentLang === 'en' ? 'Failed to create deck' : 'デッキの作成に失敗しました', 'error');
     }
   };
@@ -55,7 +55,7 @@ const DecksPage = () => {
       await api.delete(`/decks/${id}`);
       setDecks(prev => prev.filter(d => d._id !== id));
       addToast(currentLang === 'vi' ? 'Đã xóa bộ thẻ' : currentLang === 'en' ? 'Deck deleted' : 'デッキを削除しました', 'success');
-    } catch (err) {
+    } catch {
       addToast(currentLang === 'vi' ? 'Lỗi khi xóa bộ thẻ' : currentLang === 'en' ? 'Failed to delete deck' : 'デッキの削除に失敗しました', 'error');
     }
   };

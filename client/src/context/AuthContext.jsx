@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../services/api';
 
@@ -9,23 +10,23 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // BYPASS AUTH FOR TESTING
-    api.defaults.headers.common['Authorization'] = `Bearer dummy-token-for-test`;
-    fetchUser();
-  }, []);
-
   const fetchUser = async () => {
     try {
       const res = await api.get('/auth/me');
       setUser(res.data);
-    } catch (err) {
+    } catch {
       localStorage.removeItem('token');
       delete api.defaults.headers.common['Authorization'];
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // BYPASS AUTH FOR TESTING
+    api.defaults.headers.common['Authorization'] = `Bearer dummy-token-for-test`;
+    Promise.resolve().then(() => fetchUser());
+  }, []);
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
