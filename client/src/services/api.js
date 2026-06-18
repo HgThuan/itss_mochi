@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { mockAdapter } from './mockBackend';
+// import { mockAdapter } from './mockBackend';
 const api = axios.create({
   baseURL: '/api',
   headers: {
@@ -17,7 +17,7 @@ if (token) {
 // -----------------------------------------
 // USE MOCK BACKEND FOR FRONTEND-ONLY MODE
 // -----------------------------------------
-api.defaults.adapter = mockAdapter;
+// api.defaults.adapter = mockAdapter;
 
 
 // Response interceptor for auth errors
