@@ -23,9 +23,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // BYPASS AUTH FOR TESTING
-    api.defaults.headers.common['Authorization'] = `Bearer dummy-token-for-test`;
-    Promise.resolve().then(() => fetchUser());
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+      fetchUser();
+    } else {
+      // Fallback: BYPASS AUTH FOR TESTING if no saved session exists
+      api.defaults.headers.common['Authorization'] = `Bearer dummy-token-for-test`;
+      fetchUser();
+    }
   }, []);
 
   const login = async (email, password) => {
