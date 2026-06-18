@@ -10,7 +10,7 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    preferredLanguage: localStorage.getItem('preferredLanguage') || 'ja'
+    preferredLanguage: localStorage.getItem('preferredLanguage') || 'en'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

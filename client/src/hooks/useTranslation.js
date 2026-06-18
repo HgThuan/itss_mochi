@@ -7,7 +7,7 @@ export const useTranslation = () => {
   
   // Local language state for unauthenticated pages (default to 'ja' if none set)
   const [localLang, setLocalLangState] = useState(() => {
-    return localStorage.getItem('preferredLanguage') || 'ja';
+    return localStorage.getItem('preferredLanguage') || 'en';
   });
 
   // Keep local storage in sync and trigger state changes
@@ -21,7 +21,7 @@ export const useTranslation = () => {
 
   // Translation helper function
   const t = (key, params = {}) => {
-    const dict = translations[currentLang] || translations['ja'];
+    const dict = translations[currentLang] || translations['en'];
     
     // Support nested keys (e.g., 'sidebar.dashboard')
     const keys = key.split('.');

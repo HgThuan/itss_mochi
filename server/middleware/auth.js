@@ -9,9 +9,12 @@ const protect = async (req, res, next) => {
          username: 'TestUser',
          email: 'test@example.com',
          password: 'password123',
-         preferredLanguage: 'ja',
+         preferredLanguage: 'en',
          coins: 1000
        });
+    } else if (testUser.username === 'TestUser' && testUser.preferredLanguage === 'ja') {
+       testUser.preferredLanguage = 'en';
+       await testUser.save();
     }
     req.user = testUser;
     next();
