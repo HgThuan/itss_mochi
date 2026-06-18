@@ -36,6 +36,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Dummy endpoints to prevent 404 errors for unimplemented features during demo
+app.post('/api/pet/add-exp', (req, res) => {
+  res.json({ success: true, message: 'EXP updated (demo bypass)' });
+});
+app.post('/api/streak/log', (req, res) => {
+  res.json({ success: true, message: 'Streak logged (demo bypass)' });
+});
+
 const PORT = process.env.PORT || 5000;
 
 if (!process.env.VERCEL) {

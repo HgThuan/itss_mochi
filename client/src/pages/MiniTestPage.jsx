@@ -83,6 +83,18 @@ const MiniTestPage = () => {
     startTest(pendingDeck._id, questionCount);
   };
 
+  const handleTryAgainClick = () => {
+    const currentDeck = decks.find(d => d._id === (selectedDeck || deckId));
+    if (currentDeck) {
+      openSetupModal(currentDeck);
+    } else {
+      const activeId = selectedDeck || deckId;
+      if (activeId) {
+        startTest(activeId, questionCount || 10);
+      }
+    }
+  };
+
   useEffect(() => {
     const loadDecks = async () => {
       try {
@@ -362,6 +374,7 @@ const MiniTestPage = () => {
     return (
       <div>
         <ToastContainer />
+        {setupModalJSX}
         <div className="test-container">
           <div className="glass-card test-result">
             <div style={{ fontSize: '4rem', marginBottom: 'var(--space-lg)' }}>
@@ -386,7 +399,7 @@ const MiniTestPage = () => {
             </div>
 
             <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center', marginTop: 'var(--space-xl)' }}>
-              <button className="btn btn-primary" onClick={() => openSetupModal(decks.find(d => d._id === (selectedDeck || deckId)) || { _id: selectedDeck || deckId, title: '', cardCount: 999 })}>
+              <button className="btn btn-primary" onClick={handleTryAgainClick}>
                 🔄 {currentLang === 'vi' ? 'Thử lại' : currentLang === 'en' ? 'Try Again' : 'もう一度試す'}
               </button>
               <button className="btn btn-secondary" onClick={() => navigate('/decks')}>
