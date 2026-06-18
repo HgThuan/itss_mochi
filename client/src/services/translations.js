@@ -158,7 +158,8 @@ const translations = {
       signUpLink: '新規登録',
       signInLink: 'ログイン',
       loadingCreate: 'アカウント作成中...',
-      loadingSignIn: 'サインイン中...'
+      loadingSignIn: 'サインイン中...',
+      continueAsGuest: 'ゲストとして続行'
     }
   },
   en: {
@@ -320,7 +321,8 @@ const translations = {
       signUpLink: 'Sign up',
       signInLink: 'Sign in',
       loadingCreate: 'Creating account...',
-      loadingSignIn: 'Signing in...'
+      loadingSignIn: 'Signing in...',
+      continueAsGuest: 'Continue as Guest'
     }
   },
   vi: {
@@ -482,7 +484,8 @@ const translations = {
       signUpLink: 'Đăng ký ngay',
       signInLink: 'Đăng nhập',
       loadingCreate: 'Đang tạo tài khoản...',
-      loadingSignIn: 'Đang đăng nhập...'
+      loadingSignIn: 'Đang đăng nhập...',
+      continueAsGuest: 'Tiếp tục với vai trò Khách'
     }
   }
 };

@@ -8,7 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -21,6 +21,26 @@ const Login = () => {
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    setError('');
+    setLoading(true);
+    const guestEmail = 'guest@example.com';
+    const guestPassword = 'password123';
+    try {
+      await login(guestEmail, guestPassword);
+      navigate('/dashboard');
+    } catch (err) {
+      try {
+        await register('Guest User', guestEmail, guestPassword, 'ja');
+        navigate('/dashboard');
+      } catch (regErr) {
+        setError(regErr.response?.data?.message || 'Guest login failed');
+      }
     } finally {
       setLoading(false);
     }
@@ -65,6 +85,15 @@ const Login = () => {
             </div>
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? t('auth.loadingSignIn') : t('auth.signInBtn')}
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              style={{ marginTop: 'var(--space-md)', width: '100%' }}
+              onClick={handleGuestLogin}
+              disabled={loading}
+            >
+              👤 {t('auth.continueAsGuest')}
             </button>
           </form>
 
