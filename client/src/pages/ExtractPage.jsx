@@ -37,10 +37,13 @@ const ExtractPage = () => {
       
       // If a newer request has started, ignore this one
       if (currentId !== extractRequestId.current) return;
-      const extractedWords = res.data.words;
+      const extractedWords = res.data && Array.isArray(res.data.words) ? res.data.words : null;
+      if (!extractedWords) {
+        throw new Error('Invalid server response');
+      }
       setWords(extractedWords);
       setExtracted(true);
-      addToast(currentLang === 'vi' ? `Tìm thấy ${res.data.count} từ! Đang tra nghĩa từ vựng...` : currentLang === 'en' ? `Found ${res.data.count} words! Fetching meanings in parallel...` : `${res.data.count} 語検出しました！意味を検索中...`, 'info');
+      addToast(currentLang === 'vi' ? `Tìm thấy ${res.data.count || extractedWords.length} từ! Đang tra nghĩa từ vựng...` : currentLang === 'en' ? `Found ${res.data.count || extractedWords.length} words! Fetching meanings in parallel...` : `${res.data.count || extractedWords.length} 語検出しました！意味を検索中...`, 'info');
       
       // Automatically fetch definitions in parallel
       await fetchDefinitionsParallel(extractedWords, language);

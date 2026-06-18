@@ -1,0 +1,19 @@
+{
+  "name": "itss-mochi-root",
+  "version": "1.0.0",
+  "description": "Root package.json for deploying frontend and backend to Vercel",
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
+  },
+  "dependencies": {
+    "axios": "^1.16.0",
+    "bcryptjs": "^2.4.3",
+    "compromise": "^14.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "uuid": "^9.0.0"
+  }
+}

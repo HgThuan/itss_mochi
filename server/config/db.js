@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
+  // Check if we already have a connection or are in the process of connecting
+  if (mongoose.connection.readyState >= 1) {
+    console.log('MongoDB: Using existing database connection');
+    return;
+  }
+
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 30000,
