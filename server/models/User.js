@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
   preferredLanguage: {
     type: String,
     enum: ['ja', 'en', 'vi'],
-    default: 'ja'
+    default: 'en'
   }
 }, {
   timestamps: true

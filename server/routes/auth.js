@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password,
-      preferredLanguage: preferredLanguage || 'ja'
+      preferredLanguage: preferredLanguage || 'en'
     });
 
 
